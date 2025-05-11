@@ -1,0 +1,21 @@
+{
+    "workspace": [
+        "./packages/add",
+        "./packages/subtract",
+        "./packages/download"
+    ],
+    "imports": {
+      "@std/datetime": "jsr:@std/datetime@^0.225.4",
+      "@types/fs-extra": "npm:@types/fs-extra@^11.0.4",
+      "chalk": "npm:chalk@5",
+      "fs-extra": "npm:fs-extra@11.3.0"
+    },
+    "tasks": {
+        "start:add": "deno run --allow-net --allow-read ./packages/add/mod.ts",
+        "start:main": "deno run --allow-env --allow-sys ./main.ts",
+        "dev:main": "deno run --allow-env --allow-write --allow-read --allow-net --watch ./main.ts"
+    },
+    "ignore": [
+        "data"
+    ]    
+}

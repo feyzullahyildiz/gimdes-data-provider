@@ -1,0 +1,2 @@
+- https://gimnet.gimdes.com/Services/MobileServices/GetHelalGidaGuncellemePaketi
+- https://gimnet.gimdes.com/Services/MobileServices/GetDuyuruList

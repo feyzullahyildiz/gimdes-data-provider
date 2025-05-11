@@ -1,0 +1,11 @@
+{
+    "name": "@scope/download",
+    "version": "0.1.0",
+    "exports": "./mod.ts",
+    "fmt": {
+        "semiColons": true
+    },
+    "allow": [
+        "net"
+    ]
+}
