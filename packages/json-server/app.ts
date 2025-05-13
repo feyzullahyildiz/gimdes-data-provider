@@ -12,17 +12,7 @@ const BASE_FOLDER = path.join(import.meta.dirname!, "..", "..", "data");
 
 const validFolderNames = await filterValidFolders(BASE_FOLDER);
 
-const middlewares = jsonServer.defaults({ readOnly: true });
-app.use(middlewares);
-
-for (const folderName of validFolderNames) {
-  const router = jsonServer.router(
-    path.join(BASE_FOLDER, folderName, "db.json")
-  );
-  app.use(`/api/${folderName}`, router);
-}
-
-app.get("/docs", (_req, res) => {
+app.get("/api/docs", (_req, res) => {
   const ulList = validFolderNames
     .map((name) => {
       const keys = ["kategoriler", "firmalar", "sertifikalar"];
@@ -45,11 +35,27 @@ app.get("/docs", (_req, res) => {
     </html>
   `);
 });
-app.get("/kill", () => {
+const middlewares = jsonServer.defaults({ readOnly: true });
+app.use("/api", middlewares);
+
+for (const folderName of validFolderNames) {
+  const router = jsonServer.router(
+    path.join(BASE_FOLDER, folderName, "db.json")
+  );
+  app.use(`/api/${folderName}`, router);
+}
+
+app.listen(3000, () => {
+  console.log("Server is running on port http://localhost:3000");
+});
+
+const rootApp = express();
+
+rootApp.get("/kill", () => {
   console.log("KILLING SERVER");
   Deno.exit(0);
 });
 
-app.listen(3000, () => {
-  console.log("Server is running on port http://localhost:3000");
+rootApp.listen(3001, () => {
+  console.log("Root server is running on port http://localhost:3001");
 });
