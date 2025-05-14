@@ -19,10 +19,11 @@
     "typesense": "npm:typesense@2.0.3"
   },
   "tasks": {
-    "start:add": "deno run --allow-net --allow-read ./packages/add/mod.ts",
     "start:main": "deno run --allow-sys --allow-env --allow-write --allow-read --allow-net ./main.ts",
     "dev:main": "deno run --watch --allow-sys --allow-env --allow-write --allow-read --allow-net  ./main.ts",
+    "start:json-server": "deno run --allow-sys --allow-env --allow-read --allow-net ./packages/json-server/app.ts",
     "dev:json-server": "deno run --allow-sys --allow-env --allow-read --allow-net --watch ./packages/json-server/app.ts"
   },
-  "ignore": ["data"]
+  "ignore": ["data"],
+  "unstable": ["cron"]
 }

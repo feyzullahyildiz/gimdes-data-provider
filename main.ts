@@ -27,10 +27,6 @@ async function run(isCron: boolean) {
     );
 
     if (created) {
-      const { dbJsonPath, dbJsonData } = await createDbJsonForJsonServer(
-        dataJsonPath
-      );
-      console.log("dbJsonPath", dbJsonPath);
       const client = await createTypesenseClient(
         {
           host: Deno.env.get("TYPESENSE_HOST") || "localhost",
@@ -39,7 +35,30 @@ async function run(isCron: boolean) {
         },
         Deno.env.get("TYPESENSE_API_KEY") || "xyz"
       );
+      const { ok } = await client.health.retrieve();
+      if (!ok) {
+        console.log("typesense is not running");
+        return;
+      }
+      const { dbJsonPath, dbJsonData } = await createDbJsonForJsonServer(
+        dataJsonPath
+      );
+      console.log("dbJsonPath", dbJsonPath);
+      console.log("inserting new data into typesense");
       await createTypesenseCollectionsFromDbJson(client, version, dbJsonData);
+      console.log("inserting new data into typesense DONE");
+
+      const jsonServerKillUrl = Deno.env.get("JSON_SERVER_KILL_URL");
+      if (jsonServerKillUrl) {
+        console.log("killing json server");
+        console.log("jsonServerKillUrl", jsonServerKillUrl);
+        await fetch(jsonServerKillUrl).catch((e) => {
+          console.error("error killing json server", e);
+        });
+        console.log("json server killed");
+      } else {
+        console.log("no json server kill url");
+      }
     }
     console.log("created", created);
     console.log("dirPath", dirPath);

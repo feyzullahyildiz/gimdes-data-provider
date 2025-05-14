@@ -1,0 +1,42 @@
+version: "3"
+services:
+  typesense:
+    image: typesense/typesense:28.0
+    container_name: gimdes_typesense
+    restart: on-failure
+    ports:
+      - "8108:8108"
+    volumes:
+      - ./typesense-data:/data
+    command: "--data-dir /data --api-key ${TYPESENSE_API_KEY}"
+
+  json-server:
+    build:
+      context: .
+      dockerfile: devops/docker/json-server/Dockerfile
+    container_name: gimdes_json-server
+    restart: always
+    volumes:
+      - ./data_docker:/app/data
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+
+  downloader:
+    build:
+      context: .
+      dockerfile: devops/docker/downloader/Dockerfile
+    container_name: gimdes_downloader
+    restart: on-failure
+    volumes:
+      - ./data_docker:/app/data
+    environment:
+      - JSON_SERVER_KILL_URL=http://json-server:3001/kill
+      - TYPESENSE_HOST=typesense
+      - TYPESENSE_PORT=8108
+      - TYPESENSE_PROTOCOL=http
+      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
+    depends_on:
+      - typesense
+      - json-server
+

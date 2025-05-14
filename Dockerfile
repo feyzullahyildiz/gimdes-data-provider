@@ -9,4 +9,6 @@ COPY ./main.ts ./main.ts
 
 RUN deno cache main.ts
 
-CMD ["deno", "task","start:main"]
+VOLUME /app/data
+
+CMD ["deno", "task", "start:main"]
