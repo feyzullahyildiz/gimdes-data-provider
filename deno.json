@@ -1,29 +1,28 @@
 {
-    "workspace": [
-        "./packages/add",
-        "./packages/subtract",
-        "./packages/download",
-        "./packages/json-server"
-    ],
-    "imports": {
-      "@std/datetime": "jsr:@std/datetime@^0.225.4",
-      "@types/express": "npm:@types/express@^5.0.1",
-      "@types/fs-extra": "npm:@types/fs-extra@^11.0.4",
-      "@types/html-to-text": "npm:@types/html-to-text@^9.0.4",
-      "@types/json-server": "npm:@types/json-server@^0.14.8",
-      "chalk": "npm:chalk@5",
-      "express": "npm:express@^5.1.0",
-      "fs-extra": "npm:fs-extra@11.3.0",
-      "html-to-text": "npm:html-to-text@^9.0.5",
-      "json-server": "npm:json-server@0.17.4"
-    },
-    "tasks": {
-        "start:add": "deno run --allow-net --allow-read ./packages/add/mod.ts",
-        "start:main": "deno run --allow-env --allow-sys ./main.ts",
-        "dev:main": "deno run --allow-env --allow-write --allow-read --allow-net --watch ./main.ts",
-        "dev:json-server": "deno run --allow-sys --allow-env --allow-read --allow-net --watch ./packages/json-server/app.ts"
-    },
-    "ignore": [
-        "data"
-    ]    
+  "workspace": [
+    "./packages/interface",
+    "./packages/download",
+    "./packages/json-server",
+    "./packages/typesense-manager"
+  ],
+  "imports": {
+    "@std/datetime": "jsr:@std/datetime@^0.225.4",
+    "@types/express": "npm:@types/express@^5.0.1",
+    "@types/fs-extra": "npm:@types/fs-extra@^11.0.4",
+    "@types/html-to-text": "npm:@types/html-to-text@^9.0.4",
+    "@types/json-server": "npm:@types/json-server@^0.14.8",
+    "chalk": "npm:chalk@5",
+    "express": "npm:express@^5.1.0",
+    "fs-extra": "npm:fs-extra@11.3.0",
+    "html-to-text": "npm:html-to-text@^9.0.5",
+    "json-server": "npm:json-server@0.17.4",
+    "typesense": "npm:typesense@2.0.3"
+  },
+  "tasks": {
+    "start:add": "deno run --allow-net --allow-read ./packages/add/mod.ts",
+    "start:main": "deno run --allow-sys --allow-env --allow-write --allow-read --allow-net ./main.ts",
+    "dev:main": "deno run --watch --allow-sys --allow-env --allow-write --allow-read --allow-net  ./main.ts",
+    "dev:json-server": "deno run --allow-sys --allow-env --allow-read --allow-net --watch ./packages/json-server/app.ts"
+  },
+  "ignore": ["data"]
 }

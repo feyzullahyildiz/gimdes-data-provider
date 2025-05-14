@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import path from "node:path";
 import { htmlToText } from "html-to-text";
-
+import type { IJsonServerFirmaItem, IJsonServerDbJson } from "@scope/interface";
 import type { IResponseGetHelalGidaGuncellemePaketi } from "./interface-get-helal-gida-guncelleme-paketi.ts";
 
 export async function createDbJsonForJsonServer(dataJsonPath: string) {
@@ -12,11 +12,10 @@ export async function createDbJsonForJsonServer(dataJsonPath: string) {
   const baseFolder = path.dirname(dataJsonPath);
 
   const dbJsonPath = path.join(baseFolder, "db.json");
-  const dbJsonData = {
+  const dbJsonData: IJsonServerDbJson = {
     sertifikalar: data.GecerliSertifikaListesi.map((s) => ({
       id: s.SertifikaId.toString(),
       ...s,
-      // unstable_SertifikaResimleri: JSON.parse(s.SertifikaResimleri || "[]"),
       SertifikaResimleri: JSON.parse(s.SertifikaResimleri || "[]"),
       unstable_SertifikaKapsami: parseHtmlAsArray(s.SertifikaKapsami || ""),
       unstable_Tarihce: parseHtmlAsArray(s.Tarihce || ""),
@@ -30,6 +29,7 @@ export async function createDbJsonForJsonServer(dataJsonPath: string) {
   await fs.writeJSON(dbJsonPath, dbJsonData);
   return {
     dbJsonPath,
+    dbJsonData,
   };
 }
 
@@ -50,15 +50,7 @@ function parseHtmlAsArray(html: string) {
 }
 
 function getFirmalar(data: IResponseGetHelalGidaGuncellemePaketi) {
-  const map = new Map<
-    number,
-    Partial<
-      IResponseGetHelalGidaGuncellemePaketi["GecerliSertifikaListesi"][number]
-    > & {
-      id: string;
-      sertifikaIds: Array<string>;
-    }
-  >();
+  const map = new Map< number,IJsonServerFirmaItem>();
   for (const sertifika of data.GecerliSertifikaListesi) {
     if (map.has(sertifika.FirmaId)) {
       map

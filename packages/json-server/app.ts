@@ -35,6 +35,9 @@ app.get("/api/docs", (_req, res) => {
     </html>
   `);
 });
+app.get("/api/list", (_req, res) => {
+  res.json(validFolderNames);
+});
 const middlewares = jsonServer.defaults({ readOnly: true });
 app.use("/api", middlewares);
 

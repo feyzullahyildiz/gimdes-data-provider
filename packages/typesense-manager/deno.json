@@ -1,0 +1,12 @@
+{
+    "name": "@scope/typesense-manager",
+    "description": "Typesense Manager",
+    "version": "0.0.1",
+    "exports": "./mod.ts",
+    "fmt": {
+        "semiColons": true
+    },
+    "allow": [
+        "net"
+    ]
+}
