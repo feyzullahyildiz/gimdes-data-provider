@@ -5,7 +5,7 @@ services:
     container_name: gimdes_typesense
     restart: on-failure
     ports:
-      - "8108:8108"
+      - "127.0.0.1:8108:8108"
     volumes:
       - ./typesense-data:/data
     command: "--data-dir /data --api-key ${TYPESENSE_API_KEY}"
@@ -19,8 +19,8 @@ services:
     volumes:
       - ./data_docker:/app/data
     ports:
-      - "3000:3000"
-      - "3001:3001"
+      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:3001:3001"
 
   downloader:
     build:
