@@ -1,3 +1,4 @@
+import fs from "fs-extra";
 import path from "node:path";
 import {
   downloadData,
@@ -13,56 +14,49 @@ import {
 let isRunning = false;
 async function run(isCron: boolean) {
   if (isRunning) {
-    console.log("cron job already running");
+    log("cron job already running");
     return;
   }
   isRunning = true;
-  console.log("cron job running isCron: ", isCron);
+  log("cron job running isCron: ", isCron);
+
   try {
+    const client = await getTypesenseClient();
     const __dirname = import.meta.dirname!;
     const basePath = path.join(__dirname, "data");
-
     const { created, dirPath, dataJsonPath, version } = await downloadData(
       basePath
     );
-
-    if (created) {
-      const client = await createTypesenseClient(
-        {
-          host: Deno.env.get("TYPESENSE_HOST") || "localhost",
-          port: Number(Deno.env.get("TYPESENSE_PORT")) || 8108,
-          protocol: Deno.env.get("TYPESENSE_PROTOCOL") || "http",
-        },
-        Deno.env.get("TYPESENSE_API_KEY") || "xyz"
-      );
-      const { ok } = await client.health.retrieve();
-      if (!ok) {
-        console.log("typesense is not running");
-        return;
-      }
-      const { dbJsonPath, dbJsonData } = await createDbJsonForJsonServer(
-        dataJsonPath
-      );
-      console.log("dbJsonPath", dbJsonPath);
-      console.log("inserting new data into typesense");
-      await createTypesenseCollectionsFromDbJson(client, version, dbJsonData);
-      console.log("inserting new data into typesense DONE");
-
-      const jsonServerKillUrl = Deno.env.get("JSON_SERVER_KILL_URL");
-      if (jsonServerKillUrl) {
-        console.log("killing json server");
-        console.log("jsonServerKillUrl", jsonServerKillUrl);
-        await fetch(jsonServerKillUrl).catch((e) => {
-          console.error("error killing json server", e);
-        });
-        console.log("json server killed");
-      } else {
-        console.log("no json server kill url");
-      }
+    if (!created) {
+      log("created false NO NEW DATA");
+      return;
     }
-    console.log("created", created);
-    console.log("dirPath", dirPath);
+    log("created true");
+
+    log("typesense is running");
+    const { dbJsonPath, dbJsonData } = await createDbJsonForJsonServer(
+      dataJsonPath
+    );
+    log("dbJsonPath", dbJsonPath);
+    log("inserting new data into typesense");
+    await createTypesenseCollectionsFromDbJson(client, version, dbJsonData);
+    log("inserting new data into typesense DONE");
+
+    const jsonServerKillUrl = Deno.env.get("JSON_SERVER_KILL_URL");
+    if (jsonServerKillUrl) {
+      log("killing json server");
+      log("jsonServerKillUrl", jsonServerKillUrl);
+      await fetch(jsonServerKillUrl).catch((e) => {
+        log("error killing json server", e);
+      });
+      log("json server killed");
+    } else {
+      log("no json server kill url");
+    }
     await updateConfigJsonLinesFile(basePath, version, created);
+  } catch (error) {
+    log("error", error);
+    console.trace();
   } finally {
     isRunning = false;
   }
@@ -73,7 +67,33 @@ Deno.cron(
   Deno.env.get("CRON_JOB_INTERVAL") || "* * * * *",
   { backoffSchedule: [60_000, 120_000, 300_000] },
   async () => {
-    console.log("cron job running");
+    log("cron job running");
     await run(true);
   }
 );
+
+function log(...args: any[]) {
+  console.log("--------->>>>>>>>> ", new Date().toISOString(), ...args);
+}
+
+async function getTypesenseClient() {
+  const connection = {
+    host: Deno.env.get("TYPESENSE_HOST") || "localhost",
+    port: Number(Deno.env.get("TYPESENSE_PORT")) || 8108,
+    protocol: Deno.env.get("TYPESENSE_PROTOCOL") || "http",
+  };
+  const apiKey = Deno.env.get("TYPESENSE_API_KEY");
+  log("connection", connection);
+  log("apiKey", apiKey);
+  if (!apiKey) {
+    throw new Error("no typesense api key");
+  }
+  const client = await createTypesenseClient(connection, apiKey!);
+  log("checking typesense health");
+  const { ok } = await client.health.retrieve();
+
+  if (!ok) {
+    throw new Error("typesense is not running");
+  }
+  return client;
+}

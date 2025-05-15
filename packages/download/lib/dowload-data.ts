@@ -50,6 +50,7 @@ async function ensureLatestFolder(dirPath: string) {
   if (await fs.exists(lastestDirPath)) {
     await fs.rm(lastestDirPath, { recursive: true, force: true });
   }
-  await fs.ensureSymlink(dirPath, lastestDirPath, "junction");
+  
+  await fs.copy(dirPath, lastestDirPath);
   return lastestDirPath;
 }

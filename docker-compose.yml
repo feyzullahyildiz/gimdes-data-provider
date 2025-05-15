@@ -32,7 +32,7 @@ services:
       - ./data_docker:/app/data
     environment:
       - JSON_SERVER_KILL_URL=http://json-server:3001/kill
-      - TYPESENSE_HOST=typesense
+      - TYPESENSE_HOST=gimdes_typesense
       - TYPESENSE_PORT=8108
       - TYPESENSE_PROTOCOL=http
       - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
