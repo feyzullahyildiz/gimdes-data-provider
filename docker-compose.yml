@@ -16,6 +16,8 @@ services:
       dockerfile: devops/docker/json-server/Dockerfile
     container_name: gimdes_json-server
     restart: always
+    environment:
+      - API_BASE_URL=${API_BASE_URL}
     volumes:
       - ./data_docker:/app/data
     ports:

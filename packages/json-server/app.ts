@@ -13,11 +13,12 @@ const BASE_FOLDER = path.join(import.meta.dirname!, "..", "..", "data");
 const validFolderNames = await filterValidFolders(BASE_FOLDER);
 
 app.get("/api/docs", (_req, res) => {
+  const BASE_URL = Deno.env.get("API_BASE_URL") || "";
   const ulList = validFolderNames
     .map((name) => {
       const keys = ["kategoriler", "firmalar", "sertifikalar"];
       const aList = keys
-        .map((key) => `<li><a href="/api/${name}/${key}">${key}</a></li>`)
+        .map((key) => `<li><a href="${BASE_URL}/api/${name}/${key}">${key}</a></li>`)
         .join("");
       return `
       <p>${name}</p>
@@ -54,9 +55,12 @@ app.listen(3000, () => {
 
 const rootApp = express();
 
-rootApp.get("/kill", () => {
+rootApp.get("/kill", (_req, res) => {
   console.log("KILLING SERVER");
-  Deno.exit(0);
+  res.json({ message: "killing" });
+  setTimeout(() => {
+    Deno.exit(0);
+  }, 1000);
 });
 
 rootApp.listen(3001, () => {
