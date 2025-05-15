@@ -26,7 +26,6 @@ async function createSertifikaCollectionAndImportData(
   await client.collections().create({
     name: collectionName,
     fields: [
-      { name: "id", type: "string" },
       { name: "FirmaId", type: "int32" },
       { name: "FirmaAdi", type: "string" },
       { name: "FirmaAdresi", type: "string", optional: true },
@@ -81,7 +80,6 @@ async function createKategoriCollectionAndImportData(
   await client.collections().create({
     name: collectionName,
     fields: [
-      { name: "id", type: "string" },
       { name: "Id", type: "int32" },
       { name: "KategoriAdi", type: "string" },
       { name: "SertifikaSayisi", type: "int32" },
@@ -105,7 +103,6 @@ async function createFirmaCollectionAndImportData(
   await client.collections().create({
     name: collectionName,
     fields: [
-      { name: "id", type: "string" },
       { name: "FirmaId", type: "int32" },
       { name: "FirmaAdi", type: "string" },
       { name: "FirmaAdresi", type: "string", optional: true },
