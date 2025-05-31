@@ -24,11 +24,11 @@ services:
       - "127.0.0.1:3000:3000"
       - "127.0.0.1:3001:3001"
 
-  downloader:
+  fetch-and-deploy:
     build:
       context: .
-      dockerfile: devops/docker/downloader/Dockerfile
-    container_name: gimdes_downloader
+      dockerfile: devops/docker/fetch-and-deploy/Dockerfile
+    container_name: gimdes_fetch-and-deploy
     restart: on-failure
     volumes:
       - ./data_docker:/app/data

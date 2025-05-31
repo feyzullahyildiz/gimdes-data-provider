@@ -10,8 +10,8 @@ COPY deno.json ./deno.json
 COPY deno.lock ./deno.lock
 COPY main.ts ./main.ts
 
-RUN deno cache main.ts
+RUN deno cache packages/json-server/app.ts
 
 VOLUME /app/data
 
-CMD ["deno", "task", "start:main"]
+CMD ["deno", "task", "start:json-server"]

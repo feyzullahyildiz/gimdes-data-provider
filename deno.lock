@@ -15,7 +15,9 @@
     "npm:html-to-text@^9.0.5": "9.0.5",
     "npm:json-server@*": "0.17.4",
     "npm:json-server@0.17.4": "0.17.4",
-    "npm:typesense@2.0.3": "2.0.3_@babel+runtime@7.27.1"
+    "npm:typesense@2.0.3": "2.0.3_@babel+runtime@7.27.1",
+    "npm:zod@*": "3.25.33",
+    "npm:zod@^3.25.33": "3.25.33"
   },
   "jsr": {
     "@std/datetime@0.225.4": {
@@ -1138,6 +1140,9 @@
         "y18n",
         "yargs-parser"
       ]
+    },
+    "zod@3.25.33": {
+      "integrity": "sha512-RnBGYCwJFrLi/hUmeqbYjSIrS/strWjN5PHWgUfyVq96nKycSa4gp4+p6hQGwvcabZs0DWRGzyLhEeQWl+5NhA=="
     }
   },
   "workspace": {
@@ -1153,6 +1158,13 @@
       "npm:html-to-text@^9.0.5",
       "npm:json-server@0.17.4",
       "npm:typesense@2.0.3"
-    ]
+    ],
+    "members": {
+      "packages/download": {
+        "dependencies": [
+          "npm:zod@^3.25.33"
+        ]
+      }
+    }
   }
 }

@@ -1,5 +1,6 @@
-import fs from "fs-extra";
 import path from "node:path";
+import fs from "fs-extra";
+
 import {
   downloadData,
   createDbJsonForJsonServer,
@@ -18,25 +19,25 @@ async function run(isCron: boolean) {
     return;
   }
   isRunning = true;
-  log("cron job running isCron: ", isCron);
+  log("RUN STARTED isCron: ", isCron);
 
   try {
     const client = await getTypesenseClient();
-    const __dirname = import.meta.dirname!;
-    const basePath = path.join(__dirname, "data");
-    const { created, dirPath, dataJsonPath, version } = await downloadData(
-      basePath
-    );
+    const basePath = path.join(Deno.cwd(), "data");
+
+    const { created, version } = await downloadData(basePath);
     if (!created) {
       log("created false NO NEW DATA");
       return;
     }
     log("created true");
-
-    log("typesense is running");
+    const { dataJsonPath } = await renameVersionToLatest(basePath, version);
+    log("dataJsonPath", dataJsonPath);
+    log("createDbJsonForJsonServer STARTED");
     const { dbJsonPath, dbJsonData } = await createDbJsonForJsonServer(
       dataJsonPath
     );
+    log("createDbJsonForJsonServer DONE");
     log("dbJsonPath", dbJsonPath);
     log("inserting new data into typesense");
     await createTypesenseCollectionsFromDbJson(client, version, dbJsonData);
@@ -59,21 +60,12 @@ async function run(isCron: boolean) {
     console.trace();
   } finally {
     isRunning = false;
+    log("RUN FINISHED");
   }
 }
-run(false);
-Deno.cron(
-  "Cron JOB",
-  Deno.env.get("CRON_JOB_INTERVAL") || "* * * * *",
-  { backoffSchedule: [60_000, 120_000, 300_000] },
-  async () => {
-    log("cron job running");
-    await run(true);
-  }
-);
 
-function log(...args: any[]) {
-  console.log("--------->>>>>>>>> ", new Date().toISOString(), ...args);
+function log(...args: unknown[]) {
+  console.log("-> ", new Date().toISOString(), ...args);
 }
 
 async function getTypesenseClient() {
@@ -95,5 +87,36 @@ async function getTypesenseClient() {
   if (!ok) {
     throw new Error("typesense is not running");
   }
+  log("typesense is running");
   return client;
+}
+
+run(false);
+
+Deno.cron(
+  "Cron JOB",
+  Deno.env.get("CRON_JOB_INTERVAL") || "* * * * *",
+  { backoffSchedule: [60_000, 120_000, 300_000] },
+  async () => {
+    log("cron job running");
+    await run(true);
+  }
+);
+
+async function renameVersionToLatest(basePath: string, version: string) {
+  const nextVersion = "latest";
+  const source = path.join(basePath, version);
+  const target = path.join(basePath, nextVersion);
+  if (await fs.exists(target)) {
+    await fs.remove(target);
+  }
+  await fs.copy(source, target);
+
+  if (await fs.exists(source)) {
+    await fs.remove(source);
+  }
+  return {
+    dataJsonPath: path.join(target, "data.json"),
+    version: nextVersion,
+  };
 }

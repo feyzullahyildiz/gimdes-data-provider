@@ -3,7 +3,9 @@
     "./packages/interface",
     "./packages/download",
     "./packages/json-server",
-    "./packages/typesense-manager"
+    "./packages/typesense-manager",
+    "./apps/fetch-and-deploy",
+    "./apps/json-server"
   ],
   "imports": {
     "@std/datetime": "jsr:@std/datetime@^0.225.4",
@@ -19,10 +21,11 @@
     "typesense": "npm:typesense@2.0.3"
   },
   "tasks": {
-    "start:main": "deno run --allow-sys --allow-env --allow-write --allow-read --allow-net ./main.ts",
-    "dev:main": "deno run --watch --allow-sys --allow-env --allow-write --allow-read --allow-net  ./main.ts",
-    "start:json-server": "deno run --allow-sys --allow-env --allow-read --allow-net ./packages/json-server/app.ts",
-    "dev:json-server": "deno run --allow-sys --allow-env --allow-read --allow-net --watch ./packages/json-server/app.ts"
+    "cache:fetch-and-deploy": "deno cache ./apps/fetch-and-deploy/app.ts",
+    "start:fetch-and-deploy": "deno run --allow-sys --allow-env --allow-read --allow-write --allow-net --env-file=.env ./apps/fetch-and-deploy/app.ts",
+    "start:json-server": "deno run --allow-sys --allow-env --allow-read --allow-net --env-file=.env ./apps/json-server/app.ts",
+    "cache:json-server": "deno cache ./apps/json-server/app.ts",
+    "dev:json-server": "deno run --allow-sys --allow-env --allow-read --allow-net --watch ./apps/json-server/app.ts"
   },
   "ignore": ["data"],
   "unstable": ["cron"]

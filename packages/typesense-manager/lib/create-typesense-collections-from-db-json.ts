@@ -23,6 +23,13 @@ async function createSertifikaCollectionAndImportData(
 ) {
   const collectionName = `${dataName}_sertifikalar`;
 
+  const collections = await client.collections().retrieve();
+  const collection = collections.find((c) => c.name === collectionName);
+  if (collection) {
+    await client.collections(collectionName).documents().delete();
+    await client.collections(collectionName).delete();
+  }
+
   await client.collections().create({
     name: collectionName,
     fields: [

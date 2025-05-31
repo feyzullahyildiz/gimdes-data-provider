@@ -1,0 +1,8 @@
+{
+  "name": "@app/fetch-and-deploy",
+  "version": "0.0.1",
+  "exports": "./app.ts",
+  "fmt": {
+      "semiColons": true
+  }
+}

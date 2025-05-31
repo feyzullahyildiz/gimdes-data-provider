@@ -8,8 +8,8 @@ COPY apps apps
 COPY deno.json ./deno.json
 COPY deno.lock ./deno.lock
 
-RUN deno task cache:json-server
+RUN deno task cache:fetch-and-deploy
 
 VOLUME /app/data
 
-CMD ["deno", "task", "start:json-server"]
+CMD ["deno", "task", "start:fetch-and-deploy"]
