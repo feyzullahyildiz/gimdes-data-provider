@@ -9,6 +9,11 @@ services:
     volumes:
       - ./typesense-data:/data
     command: "--data-dir /data --api-key ${TYPESENSE_API_KEY}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   json-server:
     build:
@@ -23,6 +28,11 @@ services:
     ports:
       - "127.0.0.1:3000:3000"
       - "127.0.0.1:3001:3001"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   fetch-and-deploy:
     build:
@@ -42,4 +52,9 @@ services:
     depends_on:
       - typesense
       - json-server
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
