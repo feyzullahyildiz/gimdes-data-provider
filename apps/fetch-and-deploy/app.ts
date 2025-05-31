@@ -25,7 +25,7 @@ async function run(isCron: boolean) {
     const client = await getTypesenseClient();
     const basePath = path.join(Deno.cwd(), "data");
 
-    const { created, version } = await downloadData(basePath);
+    const { created, version, hashValue } = await downloadData(basePath);
     if (!created) {
       log("created false NO NEW DATA");
       return;
@@ -35,7 +35,8 @@ async function run(isCron: boolean) {
     log("dataJsonPath", dataJsonPath);
     log("createDbJsonForJsonServer STARTED");
     const { dbJsonPath, dbJsonData } = await createDbJsonForJsonServer(
-      dataJsonPath
+      dataJsonPath,
+      hashValue
     );
     log("createDbJsonForJsonServer DONE");
     log("dbJsonPath", dbJsonPath);

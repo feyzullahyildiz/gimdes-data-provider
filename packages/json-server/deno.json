@@ -1,4 +1,0 @@
-{
-  "name": "@scope/json-server",
-  "exports": "./app.ts"
-}

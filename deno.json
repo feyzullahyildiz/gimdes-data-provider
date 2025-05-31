@@ -2,7 +2,6 @@
   "workspace": [
     "./packages/interface",
     "./packages/download",
-    "./packages/json-server",
     "./packages/typesense-manager",
     "./apps/fetch-and-deploy",
     "./apps/json-server"

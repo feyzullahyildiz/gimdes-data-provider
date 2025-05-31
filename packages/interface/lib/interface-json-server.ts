@@ -61,4 +61,8 @@ export interface IJsonServerDbJson {
   sertifikalar: IJsonServerSertifikaItem[];
   kategoriler: IJsonServerKategoriItem[];
   firmalar: IJsonServerFirmaItem[];
+  version: {
+    latest: string;
+    hash: string;
+  };
 }

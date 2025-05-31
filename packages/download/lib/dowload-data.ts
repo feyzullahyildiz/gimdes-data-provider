@@ -27,6 +27,7 @@ export async function downloadData(basePath: string) {
       dataJsonPath: path.join(folder, "data.json"),
       latestDirPath: folder,
       version: LATEST_VERSION,
+      hashValue
     };
   }
 
@@ -35,20 +36,6 @@ export async function downloadData(basePath: string) {
   }
   const date = format(new Date(), "yyyy-MM-dd--HH-mm-ss");
 
-  const folderNames = await fs.readdir(basePath);
-
-  const lastFolder = folderNames.find((fn) => fn.endsWith(`___${hashValue}`));
-
-  if (lastFolder) {
-    const folder = path.join(basePath, lastFolder);
-    return {
-      created: false,
-      dirPath: folder,
-      dataJsonPath: path.join(folder, "data.json"),
-      latestDirPath: await ensureLatestFolder(folder),
-      version: lastFolder,
-    };
-  }
   const tempVersion = `${date}___${hashValue}`;
   const dirPath = path.join(basePath, tempVersion);
 
@@ -63,6 +50,7 @@ export async function downloadData(basePath: string) {
     dataJsonPath,
     latestDirPath: await ensureLatestFolder(dirPath),
     version: tempVersion,
+    hashValue,
   };
 }
 
