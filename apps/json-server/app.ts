@@ -16,7 +16,7 @@ app.get("/api/docs", (_req, res) => {
   const BASE_URL = Deno.env.get("API_BASE_URL") || "";
   const ulList = validFolderNames
     .map((name) => {
-      const keys = ["kategoriler", "firmalar", "sertifikalar"];
+      const keys = ["kategoriler", "firmalar", "sertifikalar", "version"];
       const aList = keys
         .map((key) => `<li><a href="${BASE_URL}/api/${name}/${key}">${key}</a></li>`)
         .join("");
