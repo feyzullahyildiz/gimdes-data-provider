@@ -2,6 +2,7 @@ import fs from "fs-extra";
 import path from "node:path";
 
 export async function filterValidFolders(baseFolder: string) {
+  await fs.ensureDir(baseFolder);
   const folderNames = await fs.readdir(baseFolder);
   const arr = [];
   for (const folderName of folderNames) {

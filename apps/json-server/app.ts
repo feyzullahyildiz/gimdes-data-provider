@@ -1,16 +1,20 @@
-//
-import express from "express";
 import jsonServer from "npm:json-server";
 import path from "node:path";
 import { filterValidFolders } from "./lib/filter-valid-folders.ts";
 
-export const app = express();
-
-app.use(express.json());
+export const app = jsonServer.create();
 
 const BASE_FOLDER = path.join(import.meta.dirname!, "..", "..", "data");
+console.log("BASE_FOLDER", BASE_FOLDER);
 
 const validFolderNames = await filterValidFolders(BASE_FOLDER);
+
+console.log("validFolderNames", validFolderNames);
+
+if (validFolderNames.length === 0) {
+  console.log("No valid folder names found");
+  Deno.exit(1);
+}
 
 app.get("/api/docs", (_req, res) => {
   const BASE_URL = Deno.env.get("API_BASE_URL") || "";
@@ -18,7 +22,10 @@ app.get("/api/docs", (_req, res) => {
     .map((name) => {
       const keys = ["kategoriler", "firmalar", "sertifikalar", "version"];
       const aList = keys
-        .map((key) => `<li><a href="${BASE_URL}/api/${name}/${key}">${key}</a></li>`)
+        .map(
+          (key) =>
+            `<li><a href="${BASE_URL}/api/${name}/${key}">${key}</a></li>`
+        )
         .join("");
       return `
       <p>${name}</p>
@@ -40,12 +47,12 @@ app.get("/api/list", (_req, res) => {
   res.json(validFolderNames);
 });
 const middlewares = jsonServer.defaults({ readOnly: true });
-app.use("/api", middlewares);
 
 for (const folderName of validFolderNames) {
   const router = jsonServer.router(
     path.join(BASE_FOLDER, folderName, "db.json")
   );
+  app.use(`/api/${folderName}`, middlewares);
   app.use(`/api/${folderName}`, router);
 }
 
@@ -53,7 +60,7 @@ app.listen(3000, () => {
   console.log("Server is running on port http://localhost:3000");
 });
 
-const rootApp = express();
+const rootApp = jsonServer.create();
 
 rootApp.get("/kill", (_req, res) => {
   console.log("KILLING SERVER");

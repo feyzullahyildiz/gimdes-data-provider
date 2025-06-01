@@ -8,23 +8,21 @@
   ],
   "imports": {
     "@std/datetime": "jsr:@std/datetime@^0.225.4",
-    "@types/express": "npm:@types/express@^5.0.1",
     "@types/fs-extra": "npm:@types/fs-extra@^11.0.4",
     "@types/html-to-text": "npm:@types/html-to-text@^9.0.4",
     "@types/json-server": "npm:@types/json-server@^0.14.8",
     "chalk": "npm:chalk@5",
-    "express": "npm:express@^5.1.0",
     "fs-extra": "npm:fs-extra@11.3.0",
     "html-to-text": "npm:html-to-text@^9.0.5",
-    "json-server": "npm:json-server@^1.0.0-beta.3",
+    "json-server": "npm:json-server@0.17.4",
     "typesense": "npm:typesense@2.0.3"
   },
   "tasks": {
     "cache:fetch-and-deploy": "deno cache ./apps/fetch-and-deploy/app.ts",
     "start:fetch-and-deploy": "deno run --allow-sys --allow-env --allow-read --allow-write --allow-net --env-file=.env ./apps/fetch-and-deploy/app.ts",
-    "start:json-server": "deno run --allow-sys --allow-env --allow-read --allow-net --env-file=.env ./apps/json-server/app.ts",
+    "start:json-server": "deno run --allow-sys --allow-env --allow-read --allow-write --allow-net --env-file=.env ./apps/json-server/app.ts",
     "cache:json-server": "deno cache ./apps/json-server/app.ts",
-    "dev:json-server": "deno run --allow-sys --allow-env --allow-read --allow-net --watch ./apps/json-server/app.ts"
+    "dev:json-server": "deno run --allow-sys --allow-env --allow-read --allow-write --allow-net --watch ./apps/json-server/app.ts"
   },
   "ignore": ["data"],
   "unstable": ["cron"]
