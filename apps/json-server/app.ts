@@ -53,6 +53,49 @@ for (const folderName of validFolderNames) {
     path.join(BASE_FOLDER, folderName, "db.json")
   );
   app.use(`/api/${folderName}`, middlewares);
+
+  app.use((req, res, next) => {
+    // _tr_sort değerine göre sıralama yapıyoruz.
+    const trSortFields = req.query._tr_sort?.toString().split(",") || null;
+
+    if (!trSortFields) {
+      return next(); // Eğer _tr_sort yoksa her şeyi default bırak
+    }
+
+    // Sıralama yönünü al: önce _tr_order, yoksa _order
+    const trSortOrders = req.query._tr_order?.toString().split(",") || [];
+    // console.log("trSortOrders", trSortOrders);
+
+    const routerAsAny = router as any;
+    const originalRender = routerAsAny.render;
+
+    routerAsAny.render = (req2: any, res2: any) => {
+      const data = res2.locals.data;
+
+      if (!Array.isArray(data)) {
+        return originalRender(req2, res2); // dizi değilse normal işleyiş
+      }
+
+      const sorted = [...data].sort((a, b) => {
+        for (let i = 0; i < trSortFields.length; i++) {
+          const field = trSortFields[i];
+
+          const order = trSortOrders[i] === "desc" ? -1 : 1;
+
+          const aVal = a[field]?.toString() || "";
+          const bVal = b[field]?.toString() || "";
+          const cmp = aVal.localeCompare(bVal, "tr", { sensitivity: "base" });
+          if (cmp !== 0) return cmp * order; // eşit değilse sıralamayı uygula
+        }
+        return 0; // tüm alanlar eşitse sıralama değişmesin
+      });
+
+      return res2.json(sorted);
+    };
+
+    next(); // sıradaki middleware’e devam
+  });
+
   app.use(`/api/${folderName}`, router);
 }
 
