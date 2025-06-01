@@ -43,9 +43,9 @@ async function run(isCron: boolean) {
     );
     log("createDbJsonForJsonServer DONE");
     log("dbJsonPath", dbJsonPath);
-    log("inserting new data into typesense");
+    log("inserting new data into typesense. Version: ", nextVersion);
     await createTypesenseCollectionsFromDbJson(client, nextVersion, dbJsonData);
-    log("inserting new data into typesense DONE");
+    log("inserting new data into typesense DONE. Version: ", nextVersion);
 
     const jsonServerKillUrl = Deno.env.get("JSON_SERVER_KILL_URL");
     if (jsonServerKillUrl) {
