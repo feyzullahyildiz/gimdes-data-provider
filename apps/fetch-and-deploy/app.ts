@@ -31,7 +31,10 @@ async function run(isCron: boolean) {
       return;
     }
     log("created true");
-    const { dataJsonPath } = await renameVersionToLatest(basePath, version);
+    const { dataJsonPath, version: nextVersion } = await renameVersionToLatest(
+      basePath,
+      version
+    );
     log("dataJsonPath", dataJsonPath);
     log("createDbJsonForJsonServer STARTED");
     const { dbJsonPath, dbJsonData } = await createDbJsonForJsonServer(
@@ -41,7 +44,7 @@ async function run(isCron: boolean) {
     log("createDbJsonForJsonServer DONE");
     log("dbJsonPath", dbJsonPath);
     log("inserting new data into typesense");
-    await createTypesenseCollectionsFromDbJson(client, version, dbJsonData);
+    await createTypesenseCollectionsFromDbJson(client, nextVersion, dbJsonData);
     log("inserting new data into typesense DONE");
 
     const jsonServerKillUrl = Deno.env.get("JSON_SERVER_KILL_URL");
@@ -55,7 +58,7 @@ async function run(isCron: boolean) {
     } else {
       log("no json server kill url");
     }
-    await updateConfigJsonLinesFile(basePath, version, created);
+    await updateConfigJsonLinesFile(basePath, nextVersion, created);
   } catch (error) {
     log("error", error);
     console.trace();
