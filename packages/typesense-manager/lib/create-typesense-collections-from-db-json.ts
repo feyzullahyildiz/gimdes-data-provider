@@ -26,7 +26,6 @@ async function createSertifikaCollectionAndImportData(
   const collections = await client.collections().retrieve();
   const collection = collections.find((c) => c.name === collectionName);
   if (collection) {
-    await client.collections(collectionName).documents().delete();
     await client.collections(collectionName).delete();
   }
 
@@ -84,6 +83,12 @@ async function createKategoriCollectionAndImportData(
 ) {
   const collectionName = `${dataName}_kategoriler`;
 
+  const collections = await client.collections().retrieve();
+  const collection = collections.find((c) => c.name === collectionName);
+  if (collection) {
+    await client.collections(collectionName).delete();
+  }
+
   await client.collections().create({
     name: collectionName,
     fields: [
@@ -106,6 +111,12 @@ async function createFirmaCollectionAndImportData(
   dbJsonData: IJsonServerDbJson
 ) {
   const collectionName = `${dataName}_firmalar`;
+
+  const collections = await client.collections().retrieve();
+  const collection = collections.find((c) => c.name === collectionName);
+  if (collection) {
+    await client.collections(collectionName).delete();
+  }
 
   await client.collections().create({
     name: collectionName,
