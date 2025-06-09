@@ -3,6 +3,7 @@ import path from "node:path";
 import { htmlToText } from "html-to-text";
 import type { IJsonServerFirmaItem, IJsonServerDbJson } from "@scope/interface";
 import type { IResponseGetHelalGidaGuncellemePaketi } from "@scope/interface";
+import { getMappedKategori } from "./get-mapped-kategori.ts";
 
 export async function createDbJsonForJsonServer(
   dataJsonPath: string,
@@ -15,22 +16,20 @@ export async function createDbJsonForJsonServer(
   const baseFolder = path.dirname(dataJsonPath);
 
   const dbJsonPath = path.join(baseFolder, "db.json");
+  const sertifikalar = data.GecerliSertifikaListesi.map((s) => ({
+    id: s.SertifikaId.toString(),
+    ...s,
+    SertifikaResimleri: JSON.parse(s.SertifikaResimleri || "[]"),
+    unstable_SertifikaKapsami: parseHtmlAsArray(s.SertifikaKapsami || ""),
+    unstable_Tarihce: parseHtmlAsArray(s.Tarihce || ""),
+  }));
   const dbJsonData: IJsonServerDbJson = {
     version: {
       latest: new Date().toISOString(),
       hash: hashValue,
     },
-    sertifikalar: data.GecerliSertifikaListesi.map((s) => ({
-      id: s.SertifikaId.toString(),
-      ...s,
-      SertifikaResimleri: JSON.parse(s.SertifikaResimleri || "[]"),
-      unstable_SertifikaKapsami: parseHtmlAsArray(s.SertifikaKapsami || ""),
-      unstable_Tarihce: parseHtmlAsArray(s.Tarihce || ""),
-    })),
-    kategoriler: data.KategoriListesi.map((k) => ({
-      id: k.Id.toString(),
-      ...k,
-    })),
+    sertifikalar,
+    kategoriler: getMappedKategori(data.KategoriListesi, sertifikalar),
     firmalar: getFirmalar(data),
   };
   await fs.writeJSON(dbJsonPath, dbJsonData);

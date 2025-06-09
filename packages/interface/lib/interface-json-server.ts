@@ -4,6 +4,9 @@ export interface IJsonServerKategoriItem {
   Id: number;
   KategoriAdi: string;
   SertifikaSayisi: number;
+  name: string;
+  keywords: string[];
+  emoji: string;
 }
 export interface IJsonServerFirmaItem {
   id: string;

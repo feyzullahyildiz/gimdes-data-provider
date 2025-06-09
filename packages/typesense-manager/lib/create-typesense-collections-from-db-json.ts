@@ -95,6 +95,10 @@ async function createKategoriCollectionAndImportData(
       { name: "Id", type: "int32" },
       { name: "KategoriAdi", type: "string" },
       { name: "SertifikaSayisi", type: "int32" },
+      { name: "name", type: "string" },
+      { name: "keywords", type: "string[]" },
+      { name: "emoji", type: "string" },
+      { name: "kapsam", type: "string[]" },
     ],
     enable_nested_fields: true,
   });
