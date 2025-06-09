@@ -66,6 +66,8 @@ async function createSertifikaCollectionAndImportData(
       { name: "SertifikaKapsami", type: "string" },
       { name: "unstable_SertifikaKapsami", type: "string[]" },
       { name: "unstable_Tarihce", type: "string[]" },
+      { name: "kategori_name", type: "string" },
+      { name: "kategori_emoji", type: "string" },
     ],
     enable_nested_fields: true,  
   });
