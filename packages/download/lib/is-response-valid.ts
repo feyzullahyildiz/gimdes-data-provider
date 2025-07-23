@@ -138,7 +138,7 @@ const suresiGecenSertifikaListesiSchema = z.object({
 const yenilenmeyenFirmaSertifikaListesiSchema = z.object({
   FirmaId: z.number(),
   FirmaAdi: z.string(),
-  FirmaAdresi: z.string(),
+  FirmaAdresi: z.string().optional(),
   FirmaTelefon: z.string(),
   FirmaIletisimEmail: z.string(),
   FirmaIl: z.string(),
@@ -170,7 +170,7 @@ const yenilenmeyenFirmaSertifikaListesiSchema = z.object({
 const askiyaAlinanSertifikaListesiSchema = z.object({
   FirmaId: z.number(),
   FirmaAdi: z.string(),
-  FirmaAdresi: z.string(),
+  FirmaAdresi: z.string().optional(),
   FirmaTelefon: z.string(),
   FirmaIletisimEmail: z.string().optional(),
   FirmaIl: z.string(),
@@ -204,7 +204,7 @@ const askiyaAlinanSertifikaListesiSchema = z.object({
 const sonGuncellenenSertifikaListesiSchema = z.object({
   FirmaId: z.number(),
   FirmaAdi: z.string(),
-  FirmaAdresi: z.string(),
+  FirmaAdresi: z.string().optional(),
   FirmaTelefon: z.string().optional(),
   FirmaIletisimEmail: z.string().optional(),
   FirmaIl: z.string(),

@@ -7,3 +7,7 @@
 
 ## Localde typesense kaldırmak için
 - docker compose up typesense
+
+
+# Nasıl Çalışır
+- deno run start:fetch-and-deploy
